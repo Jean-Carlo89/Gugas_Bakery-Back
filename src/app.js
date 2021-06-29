@@ -63,4 +63,10 @@ app.post("/sign-up", async(req,res)=>{
 
 })
 
+app.post("/sign-in", async(req,res)=>{
+
+    console.log(req.body)
+    res.send(200)
+})
+
 export default app
