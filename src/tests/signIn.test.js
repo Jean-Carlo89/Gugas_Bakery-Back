@@ -2,9 +2,9 @@ import app from "../app.js"
 import connection from '../databse.js'
 import supertest from 'supertest'
 
-// beforeEach(()=>{
-
-// })
+beforeEach(async()=>{
+    await connection.query(`DELETE FROM users`)
+})
 
 describe("Post / sign-in" ,()=>{
 
@@ -13,6 +13,7 @@ describe("Post / sign-in" ,()=>{
 
         const body = {
             email:'teste@gmail.com',
+            name:'teste',
             password:'123456'
         }
 
@@ -20,6 +21,7 @@ describe("Post / sign-in" ,()=>{
 
 
         body["password"] = 'testeErroSenha'
+        delete body["name"]
 
         const result = await supertest(app).post("/sign-in").send(body)
         const status = result.status
@@ -42,6 +44,34 @@ describe("Post / sign-in" ,()=>{
         expect(status).toEqual(400)
     })
 
+    it("should return an object containing token and name keys if valid params", async ()=>{
+        const body = {
+            email:'teste@gmail.com',
+            name:'teste',
+            password:'123456'
+        }
+
+        await supertest(app).post("/sign-up").send(body)
+
+        delete body["name"]
+
+        const result = await supertest(app).post('/sign-in').send(body)
+
+        expect(result.status).toEqual(200);
+        expect(result.body).toEqual(
+            expect.objectContaining({
+                token:expect.any(String),
+                user:expect.any(String)
+            })
+
+        )
+
+
+
+
+    })
+
+    
 
 })
 
