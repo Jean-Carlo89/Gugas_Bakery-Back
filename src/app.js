@@ -45,7 +45,7 @@ app.post("/sign-up", async(req,res)=>{
 
         if(checkIfEmailExist.rows.length){
             res.sendStatus(400)
-            //console.log('entrou aqui')
+            
             return
         }
 
