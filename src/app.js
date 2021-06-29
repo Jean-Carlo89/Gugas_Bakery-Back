@@ -32,8 +32,8 @@ app.post("/sign-up", async(req,res)=>{
     }
 
     const hash = bcrypt.hashSync(password,12)
-    console.log(hash)
-    
+    //console.log(hash)
+   // 
     
     try{
 
@@ -65,8 +65,57 @@ app.post("/sign-up", async(req,res)=>{
 
 app.post("/sign-in", async(req,res)=>{
 
-    console.log(req.body)
-    res.send(200)
+   // console.log(req.body)
+    const {email,password} = req.body
+
+    const userSchema = joi.object(
+        {
+            email:joi.string().email().required(),
+            password:joi.string().required()
+        }
+    )
+
+    const validate = userSchema.validate(req.body)
+
+    if(validate.error){
+        res.status(400).send('Algum dos dados está inválido')
+        console.log('não passou no validate')
+        return
+    }
+    
+    try{
+        console.log('entrou no try')
+        const result = await connection.query(`
+        SELECT * FROM users
+        WHERE email = $1
+        `,[email])
+
+        const user = result.rows[0]
+
+        if(user && bcrypt.compareSync(password,user.password)){
+            const token = uuid()
+
+            await connection.query(`
+                INSERT INTO sessions ("userId" , token)
+                VALUES($1,$2)
+
+            `,[user.id,token])
+
+            const userData = {
+                user:user.name,
+                token:token
+            }
+            res.status(200).send(userData)
+        }else{
+            res.status(401).send('email e/ou senha incorretos')
+        }
+    }catch(e){
+        console.log('Erro ao procurar usuário para login')
+        console.log(e)
+    }
+
+
+    
 })
 
 export default app
