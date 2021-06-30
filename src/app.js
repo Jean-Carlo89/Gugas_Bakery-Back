@@ -118,4 +118,111 @@ app.post("/sign-in", async(req,res)=>{
     
 })
 
+app.get("/categories", async(req,res)=>{
+
+    try{
+        const result = await connection.query(`
+        SELECT * FROM categories`)
+
+        res.send(result.rows)
+    }catch(e){
+        console.log('Erro ao pegar as categorias')
+        console.log(e)
+        res.sendStatus(500)
+    }
+    
+})
+
+app.post("/food", async(req,res)=>{
+
+        const {name,category,price,image} = req.body
+    
+       try{
+
+       await connection.query(`
+        INSERT INTO food 
+        (name,"foodCategory", price,image)
+        VALUES ($1,$2,$3,$4)
+        `,[name,category,price,image])
+
+        res.sendStatus(200)
+       }catch(e){
+        console.log('Erro ao adicionar novo item em "food"')
+        console.log(e)
+        res.sendStatus(500)
+       }
+       
+        
+    })
+
+    app.post("/categories", async(req,res)=>{
+
+        const {category,image} = req.body
+    
+       try{
+
+       await connection.query(`
+        INSERT INTO categories 
+        (category,image)
+        VALUES ($1,$2)
+        `,[category,image])
+
+        res.sendStatus(200)
+       }catch(e){
+        console.log('Erro ao adicionar novo item em "categories"')
+        console.log(e)
+        res.sendStatus(500)
+       }
+       
+        
+    })
+
+    app.get("/food/:idCategory" , async(req,res)=>{
+
+        
+
+        const categoryId = req.params.idCategory
+        console.log(categoryId)
+
+        // try{
+        //     const result = await connection.query(`
+        //         SELECT categories.category, food.* FROM categories
+        //         JOIN food 
+        //         WHERE category.id = $1 AND food."foodCategory" = categories.category
+
+                
+        //     `,[categoryId])
+
+        //     console.log( result.rows)
+        // }catch(e){
+        //     console.log('Erro ao pegar itens da categoria')
+        //     console.log(e)
+        // }
+
+        try{
+            const result = await connection.query(`
+                    SELECT categories.category
+                    FROM categories
+                    WHERE id = $1
+
+                
+            `,[categoryId])
+            
+            console.log( result.rows)
+            const category = result.rows[0].category
+            console.log(category)
+
+            const getItens = await connection.query(`
+             SELECT * FROM food WHERE "foodCategory" = $1
+            `,[category])
+
+            res.send(getItens.rows)
+        }catch(e){
+            console.log('Erro ao pegar itens da categoria')
+            console.log(e)
+        }
+        
+    })
+
+
 export default app
