@@ -135,7 +135,7 @@ app.get("/categories", async(req,res)=>{
 
 app.post("/food", async(req,res)=>{
 
-        const {name,category,price,image} = req.body
+        const {name,category,price,image} =  req.body
     
        try{
 
