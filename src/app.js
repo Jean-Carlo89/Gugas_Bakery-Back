@@ -180,25 +180,11 @@ app.post("/food", async(req,res)=>{
     app.get("/food/:idCategory" , async(req,res)=>{
 
         
-
+        console.log(req.params)
         const categoryId = req.params.idCategory
         console.log(categoryId)
 
-        // try{
-        //     const result = await connection.query(`
-        //         SELECT categories.category, food.* FROM categories
-        //         JOIN food 
-        //         WHERE category.id = $1 AND food."foodCategory" = categories.category
-
-                
-        //     `,[categoryId])
-
-        //     console.log( result.rows)
-        // }catch(e){
-        //     console.log('Erro ao pegar itens da categoria')
-        //     console.log(e)
-        // }
-
+      
         try{
             const result = await connection.query(`
                     SELECT categories.category
