@@ -184,7 +184,10 @@ app.post("/food", async(req,res)=>{
         const categoryId = req.params.idCategory
         console.log(categoryId)
 
-      
+    //     const result = await connection.query(`SELECT id FROM food WHERE name = 'Bolo de chocolate'`)
+    //     console.log(result.rows)
+
+    //   return
         try{
             const result = await connection.query(`
                     SELECT categories.category

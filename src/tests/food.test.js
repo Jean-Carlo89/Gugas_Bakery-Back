@@ -37,19 +37,33 @@ describe("POST /food", ()=>{
 
 //         await supertest(app).post("/food").send(body)
 
-//         // const body2 = {
-//         //     name:"teste name test2",
-//         //     category:"teste category 2",
-//         //     price:"400",
-//         //     image:"testsausddj8as90.jpg"
+//         const result = await connection.query(`SELECT id FROM food WHERE name = 'teste name'`)
+
+
+//         console.log('resultado do teste')
+//         console.log(result.rows)
+//         const id = result.rows[0].id
+
+//         const idCategory= id
+
         
-//         // }
+//         const result2 = await supertest(app).get(`/food/${idCategory}`)
 
-//         // await supertest(app).post("/food").send(body2)
-
-//         const result = await supertest(app).get("/food/1")
-
-//         expect(result.status).toEqual(200);
+//         expect(result2.status).toEqual(200);
+        
+//         expect(result2.body).toEqual(
+//             expect.arrayContaining([
+//                 expect.objectContaining({
+//                     id:expect.any(Number),
+//                     name: expect.any(string),
+//                     foodCategory: expect.any(string),
+//                     price: expect.any(Number),
+//                     image: expect.any(string)
+//                 })
+    
+//             ])
+            
+//         )
 //     })
 // })
 
