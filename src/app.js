@@ -37,6 +37,7 @@ app.post("/purchases", async (req, res) => {
         `,
       [token]
     );
+    console.log(userPurchasing);
 
     const id = userPurchasing.rows[0].userId;
 
