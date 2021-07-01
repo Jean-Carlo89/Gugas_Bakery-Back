@@ -1,5 +1,5 @@
 import app from '../app.js'
-import connection from '../databse.js'
+import connection from '../database.js'
 import supertest from 'supertest'
 
 beforeEach(async ()=>{
@@ -25,7 +25,7 @@ describe("POST /food", ()=>{
 
 
 // describe("GET /food:idCategory", ()=>{
-//     it("should return an array of objects contaning especific keys and status 200 if valid params",()=>{
+//     it("should return an array of objects contaning especific keys and status 200 if valid params",async ()=>{
 
 //         const body = {
 //             name:"teste name",
@@ -37,17 +37,33 @@ describe("POST /food", ()=>{
 
 //         await supertest(app).post("/food").send(body)
 
-//         const body2 = {
-//             name:"teste name test2",
-//             category:"teste category 2",
-//             price:"400",
-//             image:"testsausddj8as90.jpg"
+//         const result = await connection.query(`SELECT id FROM food WHERE name = 'teste name'`)
+
+
+//         console.log('resultado do teste')
+//         console.log(result.rows)
+//         const id = result.rows[0].id
+
+//         const idCategory= id
+
         
-//         }
+//         const result2 = await supertest(app).get(`/food/${idCategory}`)
 
-//         await supertest(app).post("/food").send(body2)
-
-//         connst result = await supertest(app).get("/food/:idCategory")
+//         expect(result2.status).toEqual(200);
+        
+//         expect(result2.body).toEqual(
+//             expect.arrayContaining([
+//                 expect.objectContaining({
+//                     id:expect.any(Number),
+//                     name: expect.any(string),
+//                     foodCategory: expect.any(string),
+//                     price: expect.any(Number),
+//                     image: expect.any(string)
+//                 })
+    
+//             ])
+            
+//         )
 //     })
 // })
 

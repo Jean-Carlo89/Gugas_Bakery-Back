@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import joi from "joi";
-import connection from "./databse.js";
+import connection from "./database.js";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import sendEmail from "./utils/sendEmail.js";
@@ -10,8 +10,6 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
-sendEmail("rafaeliunes97@gmail.com","gugasbakery63@gmail.com","teste","teste");
 
 app.post("/purchases", async (req, res) => {
   const purchaseSchema = joi.object({
@@ -212,26 +210,31 @@ app.post("/categories", async (req, res) => {
         INSERT INTO categories 
         (category,image)
         VALUES ($1,$2)
-        `,
-      [category, image]
-    );
+        `,[category,image])
 
-    res.sendStatus(200);
-  } catch (e) {
-    console.log('Erro ao adicionar novo item em "categories"');
-    console.log(e);
-    res.sendStatus(500);
-  }
-});
+        res.sendStatus(200)
+       }catch(e){
+        console.log('Erro ao adicionar novo item em "categories"')
+        console.log(e)
+        res.sendStatus(500)
+       }
+       
+        
+    })
 
-app.get("/food/:idCategory", async (req, res) => {
-  console.log(req.params);
-  const categoryId = req.params.idCategory;
-  console.log(categoryId);
+    app.get("/food/:idCategory" , async(req,res)=>{
 
-  try {
-    const result = await connection.query(
-      `
+        
+        console.log(req.params)
+        const categoryId = req.params.idCategory
+        console.log(categoryId)
+
+    //     const result = await connection.query(`SELECT id FROM food WHERE name = 'Bolo de chocolate'`)
+    //     console.log(result.rows)
+
+    //   return
+        try{
+            const result = await connection.query(`
                     SELECT categories.category
                     FROM categories
                     WHERE id = $1
