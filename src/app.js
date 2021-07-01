@@ -60,7 +60,6 @@ app.post("/purchases", async (req, res) => {
   }
 });
 
-
 app.post("/sign-up", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -78,8 +77,6 @@ app.post("/sign-up", async (req, res) => {
   }
 
   const hash = bcrypt.hashSync(password, 12);
-  //console.log(hash)
-  //
 
   try {
     const checkIfEmailExist = await connection.query(
@@ -113,7 +110,6 @@ app.post("/sign-up", async (req, res) => {
 });
 
 app.post("/sign-in", async (req, res) => {
-  // console.log(req.body)
   const { email, password } = req.body;
 
   const userSchema = joi.object({
@@ -210,31 +206,26 @@ app.post("/categories", async (req, res) => {
         INSERT INTO categories 
         (category,image)
         VALUES ($1,$2)
-        `,[category,image])
+        `,
+      [category, image]
+    );
 
-        res.sendStatus(200)
-       }catch(e){
-        console.log('Erro ao adicionar novo item em "categories"')
-        console.log(e)
-        res.sendStatus(500)
-       }
-       
-        
-    })
+    res.sendStatus(200);
+  } catch (e) {
+    console.log('Erro ao adicionar novo item em "categories"');
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
 
-    app.get("/food/:idCategory" , async(req,res)=>{
+app.get("/food/:idCategory", async (req, res) => {
+  console.log(req.params);
+  const categoryId = req.params.idCategory;
+  console.log(categoryId);
 
-        
-        console.log(req.params)
-        const categoryId = req.params.idCategory
-        console.log(categoryId)
-
-    //     const result = await connection.query(`SELECT id FROM food WHERE name = 'Bolo de chocolate'`)
-    //     console.log(result.rows)
-
-    //   return
-        try{
-            const result = await connection.query(`
+  try {
+    const result = await connection.query(
+      `
                     SELECT categories.category
                     FROM categories
                     WHERE id = $1
