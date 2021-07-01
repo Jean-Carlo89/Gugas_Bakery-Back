@@ -44,7 +44,7 @@ describe("Post /purchases", () => {
     await supertest(app).post("/sign-up").send(userBody);
     const userLogged = await supertest(app).post("/sign-in").send(userBody);
 
-    const body = { price: "banana" };
+    const body = { banana: 1000 };
 
     const result = await supertest(app)
       .post("/purchases")
