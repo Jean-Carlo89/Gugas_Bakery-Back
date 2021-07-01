@@ -1,6 +1,6 @@
 import app from '../app.js'
 import supertest from 'supertest'
-import connection from '../databse.js' 
+import connection from '../database.js' 
 
 beforeEach(async()=>{
     await connection.query(`DELETE FROM users`)

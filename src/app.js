@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import joi from 'joi'
-import  connection  from './databse.js'
+import  connection  from './database.js'
 import {v4 as uuid} from 'uuid'
 import bcrypt from 'bcrypt'
 

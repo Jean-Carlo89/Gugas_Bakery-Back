@@ -1,5 +1,9 @@
+import './setup.js'; 
 import app from './app.js'
 
-app.listen(4000, ()=>{
-    console.log('server running on port 4000')
-})
+app.listen(process.env.PORT, () => {
+    console.log(process.env.PORT)
+    console.log(process.env.DB_DATABASE)
+    console.log(process.env.DB_USER)
+  console.log(`Server is listening on port ${process.env.PORT}`);
+});
