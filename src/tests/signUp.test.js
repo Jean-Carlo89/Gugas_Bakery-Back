@@ -1,6 +1,6 @@
 import app from '../app.js'
 import supertest from 'supertest'
-import connection from '../databse.js' 
+import connection from '../database.js' 
 
 beforeEach(async()=>{
     await connection.query(`DELETE FROM users`)
@@ -8,33 +8,7 @@ beforeEach(async()=>{
 
 describe("Post / sign-up" , ()=>{
 
-
-    it(`should return status 400 if some of the data does not meet 
-    requirements`, async()=>{
-        let body = {
-            name:'te',
-            email:'teste@gmail.com',
-            password:'12345'
-        }
-
-       let result = await supertest(app).post("/sign-up").send(body)
-       let status = result.status
-
-        expect(status).toEqual(400)
-
-        body = {
-            name:'teste',
-            email:'testegmail.com',
-            password:'12345'
-        }
-         result = await supertest(app).post("/sign-up").send(body)
-         status = result.status
-
-        expect(status).toEqual(400)
-
-    })
-
-     it("should return 400 if email already in database",async ()=>{
+    it("should return 400 if email already in database",async ()=>{
 
         await connection.query(`
         INSERT INTO users (name,email,password)
@@ -68,7 +42,35 @@ describe("Post / sign-up" , ()=>{
         expect(status).toEqual(200)
      })
 
-    afterAll(()=>{
-        connection.end()
-    })
+     it(`should return status 400 if some of the data does not meet 
+     requirements`, async()=>{
+         let body = {
+             name:'te',
+             email:'teste@gmail.com',
+             password:'12345'
+         }
+ 
+        let result = await supertest(app).post("/sign-up").send(body)
+        let status = result.status
+ 
+         expect(status).toEqual(400)
+ 
+         body = {
+             name:'teste',
+             email:'testegmail.com',
+             password:'12345'
+         }
+          result = await supertest(app).post("/sign-up").send(body)
+          status = result.status
+ 
+         expect(status).toEqual(400)
+ 
+     })
+ 
+     
+})
+
+
+afterAll(()=>{
+    connection.end()
 })
