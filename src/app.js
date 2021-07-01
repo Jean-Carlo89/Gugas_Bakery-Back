@@ -209,6 +209,7 @@ app.post("/food", async(req,res)=>{
         }catch(e){
             console.log('Erro ao pegar itens da categoria')
             console.log(e)
+            res.sendStatus(500)
         }
         
     })
