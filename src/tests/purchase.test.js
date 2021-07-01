@@ -74,6 +74,8 @@ describe("Post /purchases", () => {
 });
 
 afterAll(async () => {
+  await connection.query(`DELETE FROM users`);
+  await connection.query(`DELETE FROM sessions`);
   await connection.query(`DELETE FROM purchases`);
   connection.end();
 });

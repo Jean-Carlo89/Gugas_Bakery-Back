@@ -4,14 +4,16 @@ import joi from "joi";
 import connection from "./databse.js";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
+import sendEmail from "./utils/sendEmail.js";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.post("/purchases", async (req, res) => {
+sendEmail("rafaeliunes97@gmail.com","gugasbakery63@gmail.com","teste","teste");
 
+app.post("/purchases", async (req, res) => {
   const purchaseSchema = joi.object({
     price: joi.number().integer().required(),
   });
@@ -51,7 +53,7 @@ app.post("/purchases", async (req, res) => {
             ("userId", price) 
             VALUES ($1,$2);
         `,
-      [ id, req.body.price]
+      [id, req.body.price]
     );
     res.sendStatus(201);
   } catch (err) {
@@ -59,6 +61,7 @@ app.post("/purchases", async (req, res) => {
     res.sendStatus(500);
   }
 });
+
 
 app.post("/sign-up", async (req, res) => {
   const { name, email, password } = req.body;
@@ -162,6 +165,96 @@ app.post("/sign-in", async (req, res) => {
     }
   } catch (e) {
     console.log("Erro ao procurar usuário para login");
+    console.log(e);
+  }
+});
+
+app.get("/categories", async (req, res) => {
+  try {
+    const result = await connection.query(`
+        SELECT * FROM categories`);
+
+    res.send(result.rows);
+  } catch (e) {
+    console.log("Erro ao pegar as categorias");
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+app.post("/food", async (req, res) => {
+  const { name, category, price, image } = req.body;
+
+  try {
+    await connection.query(
+      `
+        INSERT INTO food 
+        (name,"foodCategory", price,image)
+        VALUES ($1,$2,$3,$4)
+        `,
+      [name, category, price, image]
+    );
+
+    res.sendStatus(200);
+  } catch (e) {
+    console.log('Erro ao adicionar novo item em "food"');
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+app.post("/categories", async (req, res) => {
+  const { category, image } = req.body;
+
+  try {
+    await connection.query(
+      `
+        INSERT INTO categories 
+        (category,image)
+        VALUES ($1,$2)
+        `,
+      [category, image]
+    );
+
+    res.sendStatus(200);
+  } catch (e) {
+    console.log('Erro ao adicionar novo item em "categories"');
+    console.log(e);
+    res.sendStatus(500);
+  }
+});
+
+app.get("/food/:idCategory", async (req, res) => {
+  console.log(req.params);
+  const categoryId = req.params.idCategory;
+  console.log(categoryId);
+
+  try {
+    const result = await connection.query(
+      `
+                    SELECT categories.category
+                    FROM categories
+                    WHERE id = $1
+
+                
+            `,
+      [categoryId]
+    );
+
+    console.log(result.rows);
+    const category = result.rows[0].category;
+    console.log(category);
+
+    const getItens = await connection.query(
+      `
+             SELECT * FROM food WHERE "foodCategory" = $1
+            `,
+      [category]
+    );
+
+    res.send(getItens.rows);
+  } catch (e) {
+    console.log("Erro ao pegar itens da categoria");
     console.log(e);
   }
 });
