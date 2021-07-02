@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.post("/purchases", async (req, res) => {
   const purchaseSchema = joi.object({
-    price: joi.number().integer().required(),
+    price: joi.number().required(),
   });
 
   try {
@@ -64,7 +64,7 @@ app.post("/sendmail", async (req, res) => {
   const { price } = req.body;
 
   const mailSchema = joi.object({
-    price: joi.number().integer().required(),
+    price: joi.number().required(),
   });
 
   try {
