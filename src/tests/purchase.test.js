@@ -63,13 +63,6 @@ describe("Post /purchases", () => {
   });
 
   it("should return 201 for valid params", async () => {
-    const userBody = {
-      email: "teste@gmail.com",
-      name: "teste",
-      password: "123456",
-    };
-    await supertest(app).post("/sign-up").send(userBody);
-    await supertest(app).post("/sign-in").send(userBody);
 
     const body = { price: 1000 };
 
