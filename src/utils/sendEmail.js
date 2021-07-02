@@ -8,7 +8,7 @@ const sendEmail = (to, from, subject, text) => {
     to,
     from,
     subject,
-    text,
+    html:text,
   };
 
   sgMail.send(msg, function (err, info) {
@@ -22,4 +22,8 @@ const sendEmail = (to, from, subject, text) => {
 
 export default sendEmail;
 
+/*const output = `
+<h3>Você fez uma compra na Guga's Bakery no valor de ${req.body.price} reais! </h3>
+<h3>O Guga agradece o seu <strong>DINHEIRO</strong>.</h3>
+`*/
 
