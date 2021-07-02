@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.post("/purchases", async (req, res) => {
   const purchaseSchema = joi.object({
-    price: joi.number().integer().required(),
+    price: joi.number().required(),
   });
 
   try {
@@ -64,7 +64,7 @@ app.post("/sendmail", async (req, res) => {
   const { price } = req.body;
 
   const mailSchema = joi.object({
-    price: joi.number().integer().required(),
+    price: joi.number().required(),
   });
 
   try {
@@ -165,6 +165,7 @@ app.post("/sign-up", async (req, res) => {
   } catch (e) {
     console.log("Erro ao salvar novo usuário");
     console.log(e);
+    res.sendStatus(500);
   }
 });
 
@@ -219,6 +220,7 @@ app.post("/sign-in", async (req, res) => {
   } catch (e) {
     console.log("Erro ao procurar usuário para login");
     console.log(e);
+    res.sendStatus(500);
   }
 });
 
@@ -270,7 +272,7 @@ app.post("/categories", async (req, res) => {
     );
 
     res.sendStatus(200);
-  } catch (e) {
+  } catch(e) {
     console.log('Erro ao adicionar novo item em "categories"');
     console.log(e);
     res.sendStatus(500);
@@ -309,6 +311,7 @@ app.get("/food/:idCategory", async (req, res) => {
   } catch (e) {
     console.log("Erro ao pegar itens da categoria");
     console.log(e);
+    res.sendStatus(500);
   }
 });
 
