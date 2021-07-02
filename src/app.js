@@ -37,7 +37,6 @@ app.post("/purchases", async (req, res) => {
         `,
       [token]
     );
-    console.log(userPurchasing);
 
     const id = userPurchasing.rows[0].userId;
 
@@ -53,6 +52,66 @@ app.post("/purchases", async (req, res) => {
         `,
       [id, req.body.price]
     );
+
+    res.sendStatus(201);
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
+});
+
+app.post("/sendmail", async (req, res) => {
+  const { price } = req.body;
+
+  const mailSchema = joi.object({
+    price: joi.number().integer().required(),
+  });
+
+  try {
+    if (!req.headers.authorization) {
+      return res.sendStatus(401);
+    }
+
+    const token = req.headers.authorization.replace("Bearer ", "");
+
+    const userPurchasing = await connection.query(
+      `
+            SELECT "userId" 
+            FROM sessions
+            WHERE token=$1
+        `,
+      [token]
+    );
+
+    const idUser = userPurchasing.rows[0].userId;
+    console.log(idUser);
+
+    if (!idUser) {
+      return res.sendStatus(400);
+    }
+
+    const userEmail = await connection.query(
+      `
+            SELECT email 
+            FROM users
+            WHERE id=$1
+        `,
+      [idUser]
+    );
+
+    console.log(userEmail.rows[0].email);
+
+    const validation = mailSchema.validate(req.body);
+
+    if (validation.error) {
+      return res.sendStatus(400);
+    }
+    const output = `
+<h3>Obrigado por gastar ${price} reais na Guga's Bakery </h3>
+<p>O Guga agradece o seu <strong>DINHEIRO</strong>.</p>`;
+
+    sendEmail(userEmail.rows[0].email, "gugasbakery63@gmail.com", "Nova Compra", output);
+
     res.sendStatus(201);
   } catch (err) {
     console.log(err);

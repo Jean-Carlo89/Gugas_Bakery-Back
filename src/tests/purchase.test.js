@@ -63,6 +63,7 @@ describe("Post /purchases", () => {
   });
 
   it("should return 201 for valid params", async () => {
+
     const body = { price: 1000 };
 
     const result = await supertest(app)
