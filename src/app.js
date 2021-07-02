@@ -61,12 +61,10 @@ app.post("/purchases", async (req, res) => {
 });
 
 app.post("/sendmail", async (req, res) => {
-  const { price, name, email } = req.body;
+  const { price } = req.body;
 
   const mailSchema = joi.object({
     price: joi.number().integer().required(),
-    name: joi.string().min(3).required(),
-    email: joi.string().email().required(),
   });
 
   try {
@@ -85,11 +83,23 @@ app.post("/sendmail", async (req, res) => {
       [token]
     );
 
-    const id = userPurchasing.rows[0].userId;
+    const idUser = userPurchasing.rows[0].userId;
+    console.log(idUser);
 
-    if (!id) {
+    if (!idUser) {
       return res.sendStatus(400);
     }
+
+    const userEmail = await connection.query(
+      `
+            SELECT email 
+            FROM users
+            WHERE id=$1
+        `,
+      [idUser]
+    );
+
+    console.log(userEmail.rows[0].email);
 
     const validation = mailSchema.validate(req.body);
 
@@ -97,10 +107,10 @@ app.post("/sendmail", async (req, res) => {
       return res.sendStatus(400);
     }
     const output = `
-<h3>Olá, ${name}. Você fez uma compra na Guga's Bakery no valor de ${price} reais! </h3>
+<h3>Obrigado por gastar ${price} reais na Guga's Bakery </h3>
 <p>O Guga agradece o seu <strong>DINHEIRO</strong>.</p>`;
 
-    sendEmail(email, "gugasbakery63@gmail.com", "Nova Compra", output);
+    sendEmail(userEmail.rows[0].email, "gugasbakery63@gmail.com", "Nova Compra", output);
 
     res.sendStatus(201);
   } catch (err) {
